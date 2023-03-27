@@ -1,3 +1,5 @@
+import model
+
 def test_orderline_mapper_can_load_lines(session):  #(1)
     session.execute(
         "INSERT INTO order_lines (orderid, sku, qty) VALUES "
