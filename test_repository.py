@@ -1,10 +1,15 @@
 # pylint: disable=protected-access
 import model
 import repository
+
+from sqlalchemy import select, delete
 from sqlalchemy.sql import text
 
 
 def test_repository_can_save_a_batch(session):
+    # delete all records first
+    session.execute(delete(model.Batch))
+    session.execute(delete(model.OrderLine))
     batch = model.Batch("batch1", "RUSTY-SOAPDISH", 100, eta=None)
 
     repo = repository.SqlAlchemyRepository(session)
@@ -15,6 +20,8 @@ def test_repository_can_save_a_batch(session):
         text('SELECT reference, sku, _purchased_quantity, eta FROM "batches"')
     )
     assert list(rows) == [("batch1", "RUSTY-SOAPDISH", 100, None)]
+
+    session.commit()
 
 
 def insert_order_line(session):
@@ -35,7 +42,7 @@ def insert_batch(session, batch_id):
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-            ' VALUES (:batch_id, "GENERIC-SOFA", 100, null)'
+            ' VALUES (:batch_id, "GENERIC-SOFA", 100, null)',
         ),
         dict(batch_id=batch_id),
     )
@@ -57,6 +64,9 @@ def insert_allocation(session, orderline_id, batch_id):
 
 
 def test_repository_can_retrieve_a_batch_with_allocations(session):
+    # delete all records first
+    session.execute(delete(model.Batch))
+    session.execute(delete(model.OrderLine))
     orderline_id = insert_order_line(session)
     batch1_id = insert_batch(session, "batch1")
     insert_batch(session, "batch2")

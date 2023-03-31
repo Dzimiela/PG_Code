@@ -1,8 +1,9 @@
 # app
-sqlalchemy<2
+#sqlalchemy<2
+sqlalchemy
 flask
-psycopg2-binary
-redis
+# psycopg2-binary
+# redis
 
 # dev/tests
 pytest

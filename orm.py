@@ -7,8 +7,6 @@ import model
 # using SQLAlchemy 2.0-style imperative mapping
 mapper_registry = registry()
 
-# metadata = MetaData()
-
 order_lines = Table(
     "order_lines",
     mapper_registry.metadata,
