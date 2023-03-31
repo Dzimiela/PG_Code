@@ -1,17 +1,15 @@
-import abc
 import model
-
+import abc
 
 class AbstractRepository(abc.ABC):
-    @abc.abstractmethod
+    @abc.abstractmethod  #(1)
     def add(self, batch: model.Batch):
-        raise NotImplementedError
+        raise NotImplementedError  #(2)
 
     @abc.abstractmethod
     def get(self, reference) -> model.Batch:
         raise NotImplementedError
-
-
+    
 class SqlAlchemyRepository(AbstractRepository):
     def __init__(self, session):
         self.session = session
