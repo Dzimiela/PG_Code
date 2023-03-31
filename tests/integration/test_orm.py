@@ -1,11 +1,15 @@
-from domain import model
+from allocation.domain import model
 from datetime import date
+
 
 from sqlalchemy import select, delete
 from sqlalchemy.sql import text
 
 
-def test_orderline_mapper_can_load_lines(session):
+def test_orderline_mapper_can_load_lines(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.OrderLine))
 
@@ -24,12 +28,14 @@ def test_orderline_mapper_can_load_lines(session):
     ]
     # assert session.query(model.OrderLine).all() == expected
     outcome = session.scalars(select(model.OrderLine)).all()
-    print(outcome)
     assert outcome == expected
     session.close()
 
 
-def test_orderline_mapper_can_save_lines(session):
+def test_orderline_mapper_can_save_lines(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.OrderLine))
 
@@ -43,7 +49,10 @@ def test_orderline_mapper_can_save_lines(session):
     session.close()
 
 
-def test_retrieving_batches(session):
+def test_retrieving_batches(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     session.execute(
@@ -68,7 +77,10 @@ def test_retrieving_batches(session):
     session.close()
 
 
-def test_saving_batches(session):
+def test_saving_batches(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     batch = model.Batch("batch1", "sku1", 100, eta=None)
@@ -82,7 +94,10 @@ def test_saving_batches(session):
     session.close()
 
 
-def test_saving_allocations(session):
+def test_saving_allocations(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     session.execute(delete(model.OrderLine))
@@ -101,7 +116,10 @@ def test_saving_allocations(session):
     session.close()
 
 
-def test_retrieving_allocations(session):
+def test_retrieving_allocations(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     session.execute(delete(model.OrderLine))

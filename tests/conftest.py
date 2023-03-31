@@ -1,4 +1,6 @@
 # pylint: disable=redefined-outer-name
+import time
+import os
 from pathlib import Path
 
 import pytest
@@ -7,10 +9,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import delete, insert, select, text
 from sqlalchemy.orm import sessionmaker, clear_mappers
 
-import config
-from entrypoints.flask_app import create_app
-from domain.model import Batch
-from adapters.orm import mapper_registry, start_mappers, batches
+from allocation import config
+from allocation.entrypoints.flask_app import create_app
+from allocation.domain.model import Batch
+from allocation.adapters.orm import mapper_registry, start_mappers, batches
 
 
 # chapter reworked to follow
@@ -35,10 +37,24 @@ def file_sqlite_db():
 
 
 @pytest.fixture
-def session(file_sqlite_db):
+def session_factory(file_sqlite_db):
+    # setup
     start_mappers()
+    # what is "yield?"
+    # Python Generators: https://realpython.com/introduction-to-python-generators/
     yield sessionmaker(bind=file_sqlite_db)()
+    # teardown
     clear_mappers()
+    file_sqlite_db.dispose()
+
+    # remove db
+    path = Path(__file__).parent
+    os.remove(path / "allocation.db")
+
+
+@pytest.fixture
+def session(session_factory):
+    return session_factory
 
 
 @pytest.fixture

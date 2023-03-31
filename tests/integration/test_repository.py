@@ -1,12 +1,15 @@
 # pylint: disable=protected-access
-from domain import model
-from adapters import repository
+from allocation.domain import model
+from allocation.adapters import repository
 
 from sqlalchemy import select, delete
 from sqlalchemy.sql import text
 
 
-def test_repository_can_save_a_batch(session):
+def test_repository_can_save_a_batch(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     session.execute(delete(model.OrderLine))
@@ -22,9 +25,13 @@ def test_repository_can_save_a_batch(session):
     assert list(rows) == [("batch1", "RUSTY-SOAPDISH", 100, None)]
 
     session.commit()
+    session.close()
 
 
-def insert_order_line(session):
+def insert_order_line(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     session.execute(
         text(
             "INSERT INTO order_lines (orderid, sku, qty)"
@@ -38,7 +45,10 @@ def insert_order_line(session):
     return orderline_id
 
 
-def insert_batch(session, batch_id):
+def insert_batch(session_factory, batch_id):
+    # grab session object from factory
+    session = session_factory
+
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
@@ -53,7 +63,10 @@ def insert_batch(session, batch_id):
     return batch_id
 
 
-def insert_allocation(session, orderline_id, batch_id):
+def insert_allocation(session_factory, orderline_id, batch_id):
+    # grab session object from factory
+    session = session_factory
+
     session.execute(
         text(
             "INSERT INTO allocations (orderline_id, batch_id)"
@@ -63,7 +76,10 @@ def insert_allocation(session, orderline_id, batch_id):
     )
 
 
-def test_repository_can_retrieve_a_batch_with_allocations(session):
+def test_repository_can_retrieve_a_batch_with_allocations(session_factory):
+    # grab session object from factory
+    session = session_factory
+
     # delete all records first
     session.execute(delete(model.Batch))
     session.execute(delete(model.OrderLine))
@@ -82,3 +98,4 @@ def test_repository_can_retrieve_a_batch_with_allocations(session):
     assert retrieved._allocations == {
         model.OrderLine("order1", "GENERIC-SOFA", 12),
     }
+    session.close()
