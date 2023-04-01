@@ -1,4 +1,4 @@
-import os
+cimport os
 
 
 def get_sqlite_filedb_uri():
