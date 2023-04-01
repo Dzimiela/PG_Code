@@ -1,14 +1,10 @@
 # app
-#sqlalchemy<2
 sqlalchemy
 flask
-# psycopg2-binary
-# redis
+psycopg2-binary
 
-# dev/tests
+# tests
 pytest
 pytest-icdiff
 mypy
-pylint
 requests
-tenacity

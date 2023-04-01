@@ -5,3 +5,9 @@ allocation.egg-info/PKG-INFO
 allocation.egg-info/SOURCES.txt
 allocation.egg-info/dependency_links.txt
 allocation.egg-info/top_level.txt
+allocation/adapters/orm.py
+allocation/adapters/repository.py
+allocation/domain/model.py
+allocation/entrypoints/flask_app.py
+allocation/service_layer/services.py
+allocation/service_layer/unit_of_work.py
