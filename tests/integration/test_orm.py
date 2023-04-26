@@ -1,6 +1,6 @@
 from allocation.domain import model
 from datetime import date
-
+#
 
 from sqlalchemy import select, delete
 from sqlalchemy.sql import text
